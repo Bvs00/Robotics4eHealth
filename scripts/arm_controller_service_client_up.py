@@ -18,9 +18,8 @@ def talker():
 
         angle_wrist_l = -1.0
 
-
-        _ = pub_l_pitch(float32(angle_shoulder),float32(angle_wrist_l),float32(speed))
-        #print("La risposta è: " + str(response.ack))
+        response = pub_l_pitch((angle_shoulder),(angle_wrist_l),(speed))
+        print(response.ack)
 
     except rospy.ServiceException as e:
         print("Service Failed: %s", e)

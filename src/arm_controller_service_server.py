@@ -17,9 +17,9 @@ class ShoulderMotionNode:
             print(msg)
             self.motion_proxy.setAngles(["LShoulderPitch"], msg.angle_shoulder, msg.speed)
             self.motion_proxy.setAngles(["LWristYaw"], msg.angle_wrist, msg.speed)
-            #response = arm_controller_serviceResponse()
-            #response.ack = "OK"
-            #return response
+            response = arm_controller_serviceResponse()
+            response.ack = "OK"
+            return response
         except:
             self.motion_proxy = ALProxy("ALMotion", self.ip, self.port)
             self.motion_proxy.setAngles(["LShoulderPitch"], msg.x, msg.y)
