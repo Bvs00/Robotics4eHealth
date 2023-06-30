@@ -1,17 +1,21 @@
-import time
-import subprocess
+#!/usr/bin/env python
+import sys
+import rospy
+from std_msgs.msg import Float32MultiArray
+from naoqi import ALProxy
+from group3.srv import *
 
 
-def main():
-    status = subprocess.run(['python', 'arm_controller_service_client_up.py'] + ['up'], capture_output=True).stdout.strip().decode()
+def projectManager():
+    status = send_movement("up")
 
     if (status == "ACK"):
         print("Il braccio si è alzato correttamente")
     else:
         return 1
 
-    time.sleep(5)
-    status = subprocess.run(['python', 'arm_controller_service_client_up.py'] + ['down'], capture_output=True).stdout.strip().decode()
+    rospy.sleep(5)
+    status = send_movement("down")
 
     if (status == "ACK"):
         print("Il braccio si è abbassato correttamente")
@@ -20,5 +24,48 @@ def main():
     
 
 
+
+def send_movement(movement):
+    rospy.wait_for_service('/arm_rotation/left/shoulder/wrist')
+    
+    speed = 0.1  # Replace with the desired speed
+
+    try:
+        if len(sys.argv) > 1:
+            argomento = sys.argv[1]
+
+        if argomento == "up":
+            pub_movement_arm = rospy.ServiceProxy('/arm_rotation/left/shoulder/wrist', arm_controller_service)
+
+            angle_shoulder = 0.5  # Replace with the desired angle
+            
+            # Publish the motion command
+
+            angle_wrist_l = -1.8238
+
+            response = pub_movement_arm((angle_shoulder),(angle_wrist_l),(speed))
+            return response.ack
+        
+        elif argomento == "down":
+            memory_proxy = ALProxy("ALMemory", "10.0.1.236", 9559)
+            
+            valueWrist = memory_proxy.getData('Device/SubDeviceList/RWristYaw/Position/Actuator/Value')
+            valueShoulder = memory_proxy.getData('Device/SubDeviceList/RShoulderPitch/Position/Actuator/Value')
+
+            pub_movement_arm = rospy.ServiceProxy('/arm_rotation/left/shoulder/wrist', arm_controller_service)
+
+            response = pub_movement_arm((valueShoulder),(valueWrist),(speed))
+            return response.ack
+        
+
+
+
+
+    except rospy.ServiceException as e:
+        print("Service Failed: %s", e)
+
+
+
+
 if __name__ == "__main__":
-    main()
+    projectManager()
