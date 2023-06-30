@@ -58,6 +58,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
    FILES
    arm_controller_service.srv
+   Text2Speech.srv
+   HeadMotion.srv
 )
 
 ## Generate actions in the 'action' folder

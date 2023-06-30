@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from naoqi import ALProxy
 from optparse import OptionParser
-from nao_nodes.srv import *
+from group3.srv import *
 import rospy
 
 class Text2SpeechNode:
@@ -15,10 +15,12 @@ class Text2SpeechNode:
     def say(self, msg):
         try:
             self.tts.say(msg.speech)
+            response = Text2SpeechResponse()
+            response.ack = "ACK"
         except:
             self.tts = ALProxy("ALTextToSpeech", self.ip, self.port)
             self.tts.say(msg.speech)
-        return "ACK"
+        return "NACK"
     
     def start(self):
         rospy.init_node("text2speech_node")
