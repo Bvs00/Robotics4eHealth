@@ -4,7 +4,7 @@ import rospy
 
 def text_2_speech(msg="Ciao"):
     rospy.wait_for_service('/tts')
-    print("Ci sono dentro\n")
+    
     try: 
         myRospy = rospy.ServiceProxy('/tts',Text2Speech)
         _ = myRospy(msg)

@@ -15,7 +15,7 @@ class SonarNode:
         self.memory_proxy = ALProxy("ALMemory", ip, port)
         self.sonar_proxy = ALProxy("ALSonar", ip, port)
 
-        self.distanceCollection = 0
+        self.distanceCollection = 0.0
         self.numberToAccuracy = 10
         self.count = 0
 
@@ -40,16 +40,21 @@ class SonarNode:
                 msg = Float32MultiArray()
                 msg.data = [sl, sr]
 
-                self.distanceCollection += (int(msg.data[0])+int(msg.data[1]))
+                self.distanceCollection += (float(msg.data[0])+float(msg.data[1]))
 
                 # Message publishing
                 self.pub.publish(msg)
                 r.sleep()
                 if self.count >= self.numberToAccuracy :
-                    mean = self.distanceCollection/2*self.numberToAccuracy
+                    mean = self.distanceCollection/(2*self.numberToAccuracy)
                     
                     self.distanceCollection = 0
                     self.count = 0
+                    if (mean < 1):
+                        pass
+                        # Write the client 
+                        #return
+
                     print("MEAN: " + str(mean))
 
 

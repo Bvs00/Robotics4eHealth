@@ -1,0 +1,5 @@
+float32 angle_shoulder
+float32 angle_wrist
+float32 speed
+---
+string ack
