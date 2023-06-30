@@ -25,7 +25,7 @@ def send_movement():
 
             response = pub_movement_arm((angle_shoulder),(angle_wrist_l),(speed))
             print(response.ack)
-            return response.ack
+            #return response.ack
         
         elif argomento == "down":
             memory_proxy = ALProxy("ALMemory", "10.0.1.236", 9559)
@@ -37,7 +37,7 @@ def send_movement():
 
             response = pub_movement_arm((valueShoulder),(valueWrist),(speed))
             print(response.ack)
-            return response.ack
+            #return response.ack
         
 
 
