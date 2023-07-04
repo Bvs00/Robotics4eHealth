@@ -109,3 +109,24 @@ if __name__ == '__main__':
     manager.run()
 
 
+# def project_manager():
+    
+#     request_distance()
+
+#     status = send_movement_arm("up")
+
+#     if status != "ACK":
+#         print("COMANDO SBAGLIATO")
+#         return
+    
+#     text_2_speech("Fammi vedere cosa hai in mano")
+
+#     rospy.sleep(3)
+#     status = send_movement_arm("down")
+#     if status != "ACK":
+#         print("COMANDO SBAGLIATO")
+#         return
+    
+#     text_2_speech("Bravo hai superato il test")
+
+

@@ -20,22 +20,21 @@ def text_2_speech(msg):
 def request_distance():
     memory_proxy = ALProxy("ALMemory", "10.0.1.236", 9559)
     value = 0.0
-    mean = 2.0
+    mean = 0.0
     count = 0
     max_count = 25
     r = rospy.Rate(5) # 10hz
 
-    while mean > 1.0:
-        value = 0
-        while count < max_count:
-            sl = memory_proxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
-            sr = memory_proxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
-            
-            value += (sl + sr)
-            count += 1
-            
-            r.sleep()
-        mean = (value/(2*max_count))
-        print("mean_rel: ", str(mean))
+    while count < max_count:
+        sl = memory_proxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+        sr = memory_proxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+        
+        value += (sl + sr)
+        count += 1
+        
+        r.sleep()
+
+    mean = (value/(2*max_count))
+    print("mean_rel: ", str(mean))
     
-    return
+    return mean

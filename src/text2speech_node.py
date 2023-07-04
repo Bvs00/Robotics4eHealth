@@ -17,10 +17,10 @@ class Text2SpeechNode:
             self.tts.say(msg.speech)
             response = Text2SpeechResponse()
             response.ack = "ACK"
+            return response
         except:
             self.tts = ALProxy("ALTextToSpeech", self.ip, self.port)
             self.tts.say(msg.speech)
-        return "NACK"
     
     def start(self):
         rospy.init_node("text2speech_node")
