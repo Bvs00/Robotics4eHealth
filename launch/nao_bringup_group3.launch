@@ -6,7 +6,7 @@
   <node pkg="group3" type="head_motion_service_server.py" name="head_motion_service_server" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
   <node pkg="group3" type="text2speech_node.py" name="text2speech" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
   <node pkg="group3" type="arm_controller_service_server.py" name="arm_controller_service_server" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
-  <node pkg="group3" type="sonar_node.py" name="sonar_node" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
-  <node pkg="group3" type="audio_player.py" name="audio_player" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
-  
+  <node pkg="group3" type="detector_object.py" name="detector_object" required="true" args="--ip=$(arg nao_ip) --port=$(arg nao_port)" output="screen" />
+
+
 </launch>

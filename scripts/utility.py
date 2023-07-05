@@ -35,6 +35,6 @@ def request_distance():
         r.sleep()
 
     mean = (value/(2*max_count))
-    print("mean_rel: ", str(mean))
+    # print("mean_rel: ", str(mean))
     
     return mean

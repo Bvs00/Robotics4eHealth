@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rosconsole
   rospy
   std_msgs
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -60,6 +61,7 @@ add_service_files(
    arm_controller_service.srv
    Text2Speech.srv
    HeadMotion.srv
+   ImageDetector.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -73,6 +75,7 @@ add_service_files(
 generate_messages(
    DEPENDENCIES
    std_msgs
+   sensor_msgs
 )
 
 ################################################

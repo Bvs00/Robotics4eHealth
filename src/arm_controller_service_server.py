@@ -14,7 +14,6 @@ class ShoulderMotionNode:
 
     def left_shoulder_and_wrist(self, msg):
         try:
-            print(msg)
             self.motion_proxy.setAngles(["LShoulderPitch"], msg.angle_shoulder, msg.speed)
             self.motion_proxy.setAngles(["LWristYaw"], msg.angle_wrist, msg.speed)
             response = arm_controller_serviceResponse()
