@@ -30,7 +30,7 @@ def rcv_image(msg):
     if object_det in objects:
         response = ImageDetectorResponse()
         response.obj = str(objects[object_det])
-        print("\n\n\nNEL IF:", response.obj)
+        print("\n\n\nFind Object:", response.obj)
         return response
     else:
         response = ImageDetectorResponse()

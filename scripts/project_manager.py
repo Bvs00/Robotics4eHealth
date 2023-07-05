@@ -8,49 +8,73 @@ from utility import *
 from abc import abstractmethod
 from detector import *
 
-intro = "Ciao, io sono NAO. Oggi faremo un bel gioco insieme... Ti prego di avvicinarti"
+intro = "Hello, my name is NAO.  Today we're going to play a nice game together... Please come closer"
 
-# Classe astratta per il Pattern STATE
+#Abstract class, Pattern STATE
 class State():
+    """
+    Abstract class to initialize Pattern State
+    """
     @abstractmethod
     def handle(self, manager):
         pass
 
-#Classe concreta per l'intro
+#Concrete Class to Intro
 class Intro(State):
+    """
+    Concrete Class to Intro, when NAO presents itself
+    """
     def handle(self, manager):
-        print("\nSono Nello stato INTRO")
+        print("\nINTRO")
         if "ACK" != text_2_speech(intro):
-            print("Speach failed: Fammi vedere")
+            print("Speach failed: intro")
+            manager.state = manager.error
         manager.state = manager.waiting_for_person
         
+#Concrete Class to wait a person that come closer
 
-#Classe concreta per il Pattern STATE
 class WaitingForPerson(State):
+    """
+    Concrete Class to wait a person that come closer
+    """
     def handle(self, manager):
-        print("\nSono Nello stato WAITING A PERSON")
+        print("\nWAITING A PERSON")
         while request_distance() > 1.0:
-            print("Wait a child\n")
+            print("Wait a child")
         manager.state = manager.speak_and_extend_arm
         
 
 class SpeakAndExtendArm(State):
+    """
+    Concrete Class to speak and extend NAO's arm
+    """
     def handle(self, manager):
-        print("\nSono Nello stato SPEAK AND EXTEND ARM")
-        if "ACK" != text_2_speech("Iniziamo..."):
-            print("Speach failed: Fammi vedere")
+        print("\nSPEAK AND EXTEND ARM")
+        
+        if "ACK" != text_2_speech("Let's start"):
+            print("Speach failed: Let's start")
+            manager.state = manager.error
+
         if "ACK" != send_movement_arm("up"):
             print("Movement UP arm failed")
-        if "ACK" != text_2_speech("Fammi vedere cosa hai in mano, vediamo se indovino"):
-            print("Speach failed: Fammi vedere")
+            manager.state = manager.error
+
+        if "ACK" != text_2_speech("If you show me what you have in your hand, I'll try to guess"):
+            print("Speach failed: If you show me what you have in your hand, I'll try to guess")
+            manager.state = manager.error
+
         if "ACK" != send_movement_arm("down"):
             print("Movement DOWN arm failed")
+            manager.state = manager.error
         
         manager.state = manager.waiting_for_object
 
 class WaitingForObject(State):
+    """
+    Concrete Class to wait an object that is close
+    """
     def handle(self, manager):
-        print("\nSono Nello stato WAITING FOR OBJECT")
+        print("\nWAITING FOR OBJECT")
         result = request_distance()
         if float(result) < 1.0:
             manager.timer = 0
@@ -59,50 +83,64 @@ class WaitingForObject(State):
         else: 
             if manager.timer < (2):
                 manager.timer += 1
-                print("MANAGER_Timer: ", str(manager.timer))
                 rospy.sleep(1)
             else:
-                print("FALLIMENTO in WAITING OBJECT")
                 manager.timer = 0
                 manager.state = manager.iteration_failed
     
 
 class DetectObjectAndSpeak(State):
+    """
+    Concrete Class to detect an object and says what it is
+    """
     def handle(self, manager):
-        print("\nSono Nello stato DETECT OBJECT AND SPEAK")
+        print("\nDETECT OBJECT AND SPEAK")
         if "ACK" != send_movement_head("down"):
             print("Movement Head DOWN failed")
-        # DETECTION NODE
+            manager.state = manager.error
+        
         obj = ""
         obj = detector_obj()
 
         if (obj != "ACK"):
             if "ACK" != send_movement_head("up"):
                 print("Movement Head UP failed")
-            if "ACK" != text_2_speech("L'oggetto che mi hai mostrato si chiama: " + obj):
-                print("Speach failed: name object")
-            if "ACK" != text_2_speech("Molto bene"):
-                print("Speach failed: Molto bene")
+                manager.state = manager.error
+
+            if "ACK" != text_2_speech("If I am not mistaken you are holding a " + obj):
+                print("Speech failed: name object")
+                manager.state = manager.error
+
+            if "ACK" != text_2_speech("Very well, we are finished..."):
+                print("Speech failed: Very well, we are finished")
+                manager.state = manager.error
+
             manager.state = manager.waiting_for_person
+        
         else:
             if "ACK" != send_movement_head("up"):
                 print("Movement Head UP failed")
-            if "ACK" != text_2_speech("Non ho riconosciuto nessun oggetto"):
-                print("Speach failed: Molto bene")
+                manager.state = manager.error
+
+            if "ACK" != text_2_speech("I'm sorry, I didn't able to understand what was the object"):
+                print("Speach failed: I'm sorry, I didn't able to understand what was the object")
+                manager.state = manager.error
+
             manager.state = manager.speak_and_extend_arm
 
 class IterationFailed(State):
     def handle(self, manager):
-        print("\nSono Nello stato ITERATION FAILED")
+        print("\nITERATION FAILED")
         manager.iteration_count += 1
         if manager.iteration_count < 3:
-            print("iteration_count: ", str(manager.iteration_count))
             manager.state = manager.speak_and_extend_arm
         else:
-            if "ACK" != text_2_speech("Test Fallito, riproviamo a giocare..."):
-                print("Speach failed: Molto bene")
-            manager.state = manager.waiting_for_person
+            if "ACK" != text_2_speech("I'm sorry, the game is failed, let's try again"):
+                print("Speach failed: I'm sorry, the game is failed, let's try again")
+                manager.state = manager.error
+
             manager.iteration_count = 0
+            manager.state = manager.waiting_for_person
 
 class Error(State):
     def handle(self, manager):
@@ -118,6 +156,7 @@ class ManagerNode:
         self.detect_object_and_speak = DetectObjectAndSpeak()
         self.iteration_failed = IterationFailed()
         self.intro = Intro()
+        self.error = Error()
         
         self.state = self.intro
         self.iteration_count = 0
