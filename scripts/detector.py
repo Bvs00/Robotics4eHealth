@@ -9,6 +9,7 @@ from group3.srv import *
 import time
 
 
+
 objects = {
     2: 'bicycle',
     3: 'car',
@@ -159,7 +160,7 @@ class ImageInputNode:
         start_time = time.time()
 
         rate = rospy.Rate(self.fps)
-        while (time.time() - start_time) < 1000:
+        while (time.time() - start_time) < 30:
             frame = self.get_color_frame()
             if frame is not None:
                 msg = self.bridge.cv2_to_imgmsg(frame)

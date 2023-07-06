@@ -4,6 +4,7 @@ from optparse import OptionParser
 from group3.srv import *
 import rospy
 
+
 class Text2SpeechNode:
 
     def __init__(self, ip, port):

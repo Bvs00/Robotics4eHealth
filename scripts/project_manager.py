@@ -107,7 +107,7 @@ class DetectObjectAndSpeak(State):
                 print("Movement Head UP failed")
                 manager.state = manager.error
 
-            if "ACK" != text_2_speech("If I am not mistaken you are holding a " + obj):
+            if "ACK" != text_2_speech("If I am not mistaken you are holding a................ " + obj):
                 print("Speech failed: name object")
                 manager.state = manager.error
 
