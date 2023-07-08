@@ -12,7 +12,7 @@ class Detector():
         input_tensor = input_tensor[tf.newaxis, ...]
         detections = self.detect_fn(input_tensor)
         num_above_thresh = np.sum( detections['detection_scores'] > threshold )
-        print ("%d objects found" % num_above_thresh)
+        # print ("%d objects found" % num_above_thresh)
         detections.pop('num_detections')
         detections = {key: value[0, :num_above_thresh].numpy() for key, value in detections.items()}
         detections['detection_classes'] = detections['detection_classes'].astype(np.int64)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from naoqi import ALProxy
 from optparse import OptionParser
-from nao_nodes.srv import *
+from group3.srv import *
 import rospy
 
 class WakeUpNode:

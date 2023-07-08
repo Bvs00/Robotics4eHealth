@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import rospy
-from sensor_msgs.msg import Image
 from detector import Detector
 import numpy as np
 from classmap import objects

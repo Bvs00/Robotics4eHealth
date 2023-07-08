@@ -27,7 +27,7 @@ def request_distance():
     mean = 0.0
     count = 0
     max_count = 20
-    r = rospy.Rate(5) # 10hz
+    r = rospy.Rate(5) # 5hz
 
     while count < max_count:
         sl = memory_proxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")

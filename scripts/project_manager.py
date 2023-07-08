@@ -81,7 +81,7 @@ class WaitingForObject(State):
             manager.iteration_count = 0
             manager.state = manager.detect_object_and_speak
         else: 
-            if manager.timer < (2):
+            if manager.timer < (4):
                 manager.timer += 1
                 rospy.sleep(1)
             else:
@@ -102,15 +102,17 @@ class DetectObjectAndSpeak(State):
         obj = ""
         obj = detector_obj()
 
-        if (obj != "ACK"):
-            if "ACK" != send_movement_head("up"):
-                print("Movement Head UP failed")
-                manager.state = manager.error
+        if "ACK" != send_movement_head("up"):
+            print("Movement Head UP failed")
+            manager.state = manager.error
 
+        if (obj != "ACK"):
             if "ACK" != text_2_speech("If I am not mistaken you are holding a................ " + obj):
                 print("Speech failed: name object")
                 manager.state = manager.error
 
+            rospy.sleep(1)
+            
             if "ACK" != text_2_speech("Very well, we are finished..."):
                 print("Speech failed: Very well, we are finished")
                 manager.state = manager.error
@@ -118,10 +120,6 @@ class DetectObjectAndSpeak(State):
             manager.state = manager.waiting_for_person
         
         else:
-            if "ACK" != send_movement_head("up"):
-                print("Movement Head UP failed")
-                manager.state = manager.error
-
             if "ACK" != text_2_speech("I'm sorry, I didn't able to understand what was the object"):
                 print("Speach failed: I'm sorry, I didn't able to understand what was the object")
                 manager.state = manager.error
@@ -161,10 +159,6 @@ class ManagerNode:
         self.state = self.intro
         self.iteration_count = 0
         self.timer = 0
-        self.i = 0
-        self.rate_value = 10
-        self.ack = "ACK"
-        self.result = 0
 
     def run(self):
         while True:

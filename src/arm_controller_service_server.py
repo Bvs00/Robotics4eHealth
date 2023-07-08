@@ -1,11 +1,10 @@
 #!/usr/bin/python
 from naoqi import ALProxy
 from optparse import OptionParser
-from std_msgs.msg import Float32MultiArray
 import rospy
 from group3.srv import *
 
-class ShoulderMotionNode:
+class ArmMotionNode:
 
     def __init__(self, ip, port):
         self.ip = ip
@@ -39,7 +38,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     try:
-        node = ShoulderMotionNode(options.ip, int(options.port))
+        node = ArmMotionNode(options.ip, int(options.port))
         node.start()
     except rospy.ROSInterruptException:
         pass
