@@ -12,16 +12,15 @@ class ArmMotionNode:
         self.motion_proxy = ALProxy("ALMotion", ip, port)
 
     def left_shoulder_and_wrist(self, msg):
+        angles = [msg.angle_shoulder, msg.angle_wrist]
         try:
-            self.motion_proxy.setAngles(["LShoulderPitch"], msg.angle_shoulder, msg.speed)
-            self.motion_proxy.setAngles(["LWristYaw"], msg.angle_wrist, msg.speed)
+            self.motion_proxy.setAngles(["LShoulderPitch","LWristYaw" ], angles, msg.speed)
             response = arm_controller_serviceResponse()
             response.ack = "ACK"
             return response
         except:
             self.motion_proxy = ALProxy("ALMotion", self.ip, self.port)
-            self.motion_proxy.setAngles(["LShoulderPitch"], msg.angle_shoulder, msg.speed)
-            self.motion_proxy.setAngles(["LWristYaw"], msg.angle_wrist, msg.speed)
+            self.motion_proxy.setAngles(["LShoulderPitch","LWristYaw" ], angles, msg.speed)
 
 
     def start(self):
